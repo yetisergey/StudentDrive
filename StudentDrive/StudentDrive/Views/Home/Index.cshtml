@@ -1,0 +1,196 @@
+﻿<link rel="stylesheet" href="~/Content/Main.css" />
+<link rel="stylesheet" href="~/Content/jquery.loading.min.css" />
+<script src="~/Scripts/knockout-3.4.1.js"></script>
+<script src="~/Scripts/FileSaver.min.js"></script>
+<script src="~/Scripts/circles.js"></script>
+<script src="~/Scripts/jquery.loading.min.js"></script>
+<script src="~/Scripts/chart.js"></script>
+<script src="~/Scripts/app/Main.js"></script>
+
+<div class="well">
+    <label class="btn btn-md btn-success btn-file" id="labelupload">
+        <span class='glyphicon glyphicon-cloud-upload'></span> Upload <input type="file" id="upload" multiple style="display: none;">
+    </label>
+    <button class="btn btn-md btn-primary" id="download"><span class="glyphicon glyphicon-cloud-download"> Download</span></button>
+    <button class="btn btn-md btn-danger" id="delete"><span class="glyphicon glyphicon-erase"> Delete</span></button>
+    <button class="btn btn-md btn-info" id="share"><span class="glyphicon glyphicon-share-alt"> Share</span></button>
+    <button class="btn btn-md btn-warning" id="deleteShareFromFile"><span class="glyphicon glyphicon-erase"> TurnOfShare</span></button>
+    <button class="btn btn-md btn-warning" id="deleteShares" style="display:none"><span class="glyphicon glyphicon-erase"> DeleteShare</span></button>
+    <button class="btn btn-md btn-warning" id="recovery" style="display:none"><span class="glyphicon glyphicon-share-alt"> RecoveryFile</span></button>
+</div>
+<table class="table" data-bind="with:ListFiles">
+    <thead>
+        <tr>
+            <th><input type="checkbox" data-bind="click:addAllFileToChecked" id="selectall"> Select All</th>
+            <th>File Name</th>
+            <th>Size</th>
+            <th>Date of upload</th>
+            <th data-bind="visible:visibleShared">Shared</th>
+            <th data-bind="visible:visibleRewrite">Rewrite</th>
+
+        </tr>
+    </thead>
+    <tbody data-bind="foreach:Array">
+        <tr>
+            <td><input type="checkbox" data-bind="click:$parent.addFileToChecked,attr:{Id:Id}"> </td>
+            <td data-bind="text:Name"></td>
+            <td data-bind="text:$parent.parseToMB(Size)"></td>
+            <td data-bind="text:$parent.parseToDate(DateOfUpload)"></td>
+            <td class="visibleShared" data-bind="html:$parent.parseToShare(Share,Id)"></td>
+            <td class="visibleRewrite" data-bind="html:$parent.parseToRewrite(Rewrite,Id)"></td>
+        </tr>
+    </tbody>
+</table>
+
+<!-- Modal -->
+<div id="playersModalShare" class="modal fade" role="dialog">
+    <div class="modal-dialog">
+        <div class="modal-content" data-bind="with:ListPlayers">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+                <h4 class="modal-title">Change Person</h4>
+            </div>
+            <div class="modal-body">
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th></th>
+                            <th>Full Name</th>
+                            <th>Право на перезапись</th>
+                        </tr>
+                    </thead>
+                    <tbody data-bind="foreach:Array">
+                        <tr>
+                            <td><input type="checkbox" data-bind="click:$parent.addPlayerToChecked,attr:{Id:Id}"> </td>
+                            <td data-bind="text:FirstName+' '+SecondName"></td>
+                            <td><input type="checkbox" data-bind="click:$parent.addPlayerToReWrite,attr:{class:Id}"></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                <button type="button" class="btn btn-success" data-bind="click:onSubmit" data-dismiss="modal">Save</button>
+            </div>
+        </div>
+
+    </div>
+</div>
+
+<!-- Modal -->
+<div id="playerModalSettings" class="modal fade" role="dialog">
+    <div class="modal-dialog">
+        <div class="modal-content" data-bind="with:SettingsPlayer">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+                <h4 class="modal-title">Settings</h4>
+            </div>
+            <div class="modal-body">
+                <div class="form-horizontal">
+                    <div class="form-group">
+                        <label class="control-label col-sm-4">FirstName</label>
+                        <div class="col-sm-8">
+                            <input class="form-control" data-bind="value:FirstName">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="control-label col-sm-4" for="SecondName">SecondName</label>
+                        <div class="col-sm-8">
+                            <input class="form-control" data-bind="value:SecondName">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="control-label col-sm-4">Login</label>
+                        <div class="col-sm-8">
+                            <input class="form-control" data-bind="value:Login">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="control-label col-sm-4">Password</label>
+                        <div class="col-sm-8">
+                            <input class="form-control" type="password" data-bind="value:Password">
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-danger" data-dismiss="modal" data-bind="click:onDelete">Delete Account</button>
+                <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                <button type="button" class="btn btn-success" data-bind="click:onSubmit" data-dismiss="modal">Save</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Modal -->
+<div id="statisticModalSettings" class="modal fade" role="dialog">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+                <h4 class="modal-title">Statistic</h4>
+            </div>
+            <div class="modal-body">
+                <div class="form-horizontal">
+                    <div style="text-align:center">
+                        <h2 style="font-size:24px">Disk Usage</h2>
+                        <div class="circle" id="circles-1"></div>
+                        <hr />
+                        <canvas id="myChart" width="400" height="400"></canvas>
+                        <hr />
+                        <h2 style="font-size:24px">Disk Usage in MB</h2>
+                        <table class="table table-bordered">
+                            <tbody>
+                                <tr>
+                                    <td>Размер диска</td>
+                                    <td>250 МБ</td>
+                                </tr>
+                                <tr>
+                                    <td>Использовано</td>
+                                    <td id="textUsageDisk"></td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">Закрыть</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Modal -->
+<div id="shareModalSettings" class="modal fade" role="dialog">
+    <div class="modal-dialog">
+        <div class="modal-content" data-bind="with:ListPlayersForShare">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+                <h4 class="modal-title">Share Settings</h4>
+            </div>
+            <div class="modal-body">
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th>Full Name</th>
+                            <th>Право на перезапись</th>
+                            <th>Удалить</th>
+                        </tr>
+                    </thead>
+                    <tbody data-bind="foreach:Array">
+                        <tr data-bind="attr:{class:Id}">
+                            <td data-bind="text:FirstName+' '+SecondName"></td>
+                            <td><input type="checkbox" data-bind="checked:checkedShare"></td>
+                            <td><span class="glyphicon glyphicon-remove" data-bind="click:$parent.removeFromList,attr:{Id:Id}"></span> </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                <button type="button" class="btn btn-success" data-bind="click:onSubmit" data-dismiss="modal">Save</button>
+            </div>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,28 @@
+﻿@{
+    ViewBag.Title = "Вход";
+    Layout = null;
+}
+
+<head>
+    <title>StudentDrive</title>
+    <link rel="stylesheet" href="~/Content/Enter.css" media="screen" type="text/css" />
+    <script src="~/Scripts/jquery-3.1.1.min.js"></script>
+    <script src="~/Scripts/knockout-3.4.1.js"></script>
+    <script src="~/Scripts/app/enter.viewmodel.js"></script>
+</head>
+<div class="four"><h1>Student Drive</h1></div>
+<div id="login">
+    <form method="get">
+        <fieldset class="clearfix">
+            <p><span class="fontawesome-user"></span><input type="text" value="Логин" onBlur="if(this.value == '') this.value = 'Логин'" onFocus="if(this.value == 'Логин') this.value = ''" data-bind="value:login" required></p>
+            <p><span class="fontawesome-lock"></span><input type="password" value="Пароль" onBlur="if(this.value == '') this.value = 'Пароль'" onFocus="if(this.value == 'Пароль') this.value = ''" data-bind="value:password" required></p>
+            <p><input type="submit" value="ВОЙТИ" data-bind="click:onEnter"></p>
+        </fieldset>
+    </form>
+    <div class="form-group">
+        @TempData["EnterMessage"]
+        <div class="col-md-10" data-bind="text:error">
+        </div>
+    </div>
+    <img src="~/fonts/icons/vk.png" width="60" data-bind="click:onVkAuth" />
+</div>

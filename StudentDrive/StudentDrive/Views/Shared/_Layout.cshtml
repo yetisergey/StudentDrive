@@ -1,0 +1,50 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>StudentDrive</title>
+    <script src="~/Scripts/jquery-3.1.1.min.js"></script>
+    <link rel="stylesheet" href="~/Content/bootstrap.min.css" />
+    <script src="~/Scripts/bootstrap.min.js"></script>
+</head>
+<body>
+    <nav class="navbar navbar-default navbar-static-top">
+        <div class="container">
+            <div class="navbar-header">
+                <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar" aria-expanded="false" aria-controls="navbar">
+                    <span class="sr-only">Toggle navigation</span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                </button>
+                @Html.ActionLink("StudentDrive", "Index", "Home", new { area = "" }, new { @class = "navbar-brand" })
+            </div>
+            <div id="navbar" class="navbar-collapse collapse">
+                <ul class="nav navbar-nav">
+                    <li class="active"><a data-toggle="tab" data-bind="click:My_Drive"><span class="glyphicon glyphicon-cloud"></span> My Drive</a></li>
+                    <li><a id="Profile" data-toggle="tab" data-bind="click:Share"><span class="glyphicon glyphicon-user"></span> Share</a></li>
+                    <li><a data-toggle="tab" data-bind="click:Recycle_bin"><span class="glyphicon glyphicon-trash"></span> Recycle bin</a></li>
+                </ul>
+                <ul class="nav navbar-nav navbar-right">
+                    <li>
+                        <a id="namePlayer"></a>
+                    </li>
+                    <li>
+                        <a id="settingsPlayer"><span class="glyphicon glyphicon-wrench"></span></a>
+                    </li>
+                    <li>
+                        <a id="statisticPlayer"><span class="glyphicon glyphicon-signal"></span></a>
+                    </li>
+                    <li>
+                        <a href="/Home/LogOut"><span class="glyphicon glyphicon-log-out"></span></a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+    <div class="container">
+        @RenderBody()
+    </div>
+</body>
+</html>
