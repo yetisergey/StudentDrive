@@ -10,7 +10,7 @@
             {
                 _context = new SDContext();
             }
-            catch (Exception)
+            catch (Exception e)
             {
                 throw new Exception("Внутреняя ошибка сервера");
             }

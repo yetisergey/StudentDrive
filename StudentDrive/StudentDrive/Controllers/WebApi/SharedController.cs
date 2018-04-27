@@ -36,7 +36,7 @@
                     return Ok(resList);
                 }
             }
-            catch (Exception e)
+            catch
             {
                 return Ok();
             }
